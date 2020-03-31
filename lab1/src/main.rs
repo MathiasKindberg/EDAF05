@@ -9,8 +9,7 @@ struct Person {
 // PS cmd to start. --release for optimized version.
 // Get-Content -Path .\1.in -Raw | cargo run
 
-// Gets the input from Stdin and then splits it into a vector with a number
-// in each field. 
+// Gets the input from Stdin and then splits it into a vector with a number in each field. 
 fn get_input() -> Result<Vec<String>, std::io::Error> {
     let mut raw_input = String::new();
     io::stdin().read_to_string(&mut raw_input)?;
@@ -25,6 +24,8 @@ fn get_input() -> Result<Vec<String>, std::io::Error> {
     Ok(clean_input)
 }
 
+// Parses the input vector into the lists of men and women we need for the GS algorithm as 
+// given by the instructions.
 fn parse_input(input: Vec<String>) -> Result<(Vec<Person>, Vec<Person>), Box<dyn std::error::Error>> {
     let num_people: usize = input[0].parse()?;
 
