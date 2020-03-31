@@ -26,19 +26,17 @@ fn get_input() -> Result<Vec<String>, std::io::Error> {
 }
 
 fn check_alike(word1: &String, word2: &String) -> bool {
-    let mut alike = 0;
-    let mut used_chars = vec![false; 5]; // Keep track of which chars we have already matched on.
+    let mut used_chars = vec![0; 5]; // Keep track of which chars we have already matched on.
 
     for ch1 in word1[1..].chars() {
         for (i, ch) in word2.chars().enumerate() {
-            if ch == ch1 && used_chars[i] == false {
-                used_chars[i] = true;
-                alike += 1;
-                break; // There -> Retch, dont count both e's.
+            if ch == ch1 && used_chars[i] == 0 {
+                used_chars[i] = 1;
+                break; // Don't match twice on the same character.
             }
         }
     }
-    alike == 4
+    used_chars.iter().sum::<u32>() == 4
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -57,14 +55,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut words = Vec::new();
 
     for word in input[2..num_words+2].iter() {
+        println!("{}", word);
         for alike in &words {
             if check_alike(word, alike) {
                 // Words alike, do magic.
             }
+            if check_alike(alike, word) {
+                // Words alike, do magic
+            }
+
+            // Remember, we need to check both ways, since some words have double connections
+            // and others dont.
             println!("{} {}: {}", word, alike, check_alike(word, alike));
+            println!("{} {}: {}", alike, word, check_alike(alike, word));
+
         }
         words.push(word.to_string());
-        println!("{}", word);
     }
 
     // Process connection queries in chunks of 2.
