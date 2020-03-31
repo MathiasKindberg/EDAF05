@@ -7,7 +7,7 @@ struct Person {
 }
 
 // PS cmd to start. --release for optimized version.
-// Get-Content -Path .\1.in -Raw | cargo run
+// Get-Content -Path .\2testmid.in -Raw | cargo run
 
 // Gets the input from Stdin and then splits it into a vector with a number
 // in each field. 
@@ -37,7 +37,7 @@ fn parse_input(input: Vec<String>) -> Result<(Vec<Person>, Vec<Person>), Box<dyn
     for chunk in input[1..].chunks(num_people + 1) {
         // Parse the chunk containing string values into integers.
         let input = chunk
-            .into_iter()
+            .iter   ()
             .map(|s| {
                 s.parse::<usize>()
                     .expect("Error parsing person input to integer")
@@ -72,7 +72,7 @@ fn parse_input(input: Vec<String>) -> Result<(Vec<Person>, Vec<Person>), Box<dyn
     // constant vectors. Filter_map simply removes all none values. 
     let women: Vec<Person> = women.into_iter().filter_map(|x| x).collect();
     let men: Vec<Person> = men.into_iter().filter_map(|x| x).collect();
-    return Ok((women, men));
+    Ok((women, men))
 }
 
 
@@ -102,7 +102,7 @@ fn gs(women: Vec<Person>, men: Vec<Person>) -> Option<Vec<Option<usize>>> {
             });
         }
     }
-    return Some(pairs);
+    Some(pairs)
 }
 
 // Just box up any error that is encountered, allows us to us ? on any type that somehow implements the std error type.
