@@ -9,7 +9,7 @@ struct Person {
 // PS cmd to start. --release for optimized version.
 // Get-Content -Path .\2testmid.in -Raw | cargo run
 
-// Gets the input from Stdin and then splits it into a vector with a number in each field. 
+// Gets the input from Stdin and then splits it into a vector with a number in each field.
 fn get_input() -> Result<Vec<String>, std::io::Error> {
     let mut raw_input = String::new();
     io::stdin().read_to_string(&mut raw_input)?;
@@ -18,15 +18,17 @@ fn get_input() -> Result<Vec<String>, std::io::Error> {
     let mut clean_input: Vec<String> = raw_input
         .split(&[' ', '\n'][..]) // Split the input by line and/or space
         .map(|s| s.to_string()) // Convert the &str to string.
-        .collect();             // Collect into vector.
+        .collect(); // Collect into vector.
 
     clean_input.retain(|s| s != ""); // Remove empty elements.
     Ok(clean_input)
 }
 
-// Parses the input vector into the lists of men and women we need for the GS algorithm as 
+// Parses the input vector into the lists of men and women we need for the GS algorithm as
 // given by the instructions.
-fn parse_input(input: Vec<String>) -> Result<(Vec<Person>, Vec<Person>), Box<dyn std::error::Error>> {
+fn parse_input(
+    input: Vec<String>,
+) -> Result<(Vec<Person>, Vec<Person>), Box<dyn std::error::Error>> {
     let num_people: usize = input[0].parse()?;
 
     // Computation is done on indexes, create vectors of right length containing none values.
@@ -38,7 +40,7 @@ fn parse_input(input: Vec<String>) -> Result<(Vec<Person>, Vec<Person>), Box<dyn
     for chunk in input[1..].chunks(num_people + 1) {
         // Parse the chunk containing string values into integers.
         let input = chunk
-            .iter   ()
+            .iter()
             .map(|s| {
                 s.parse::<usize>()
                     .expect("Error parsing person input to integer")
@@ -69,13 +71,12 @@ fn parse_input(input: Vec<String>) -> Result<(Vec<Person>, Vec<Person>), Box<dyn
         }
     }
 
-    // We now have complete cleaned lists without none values, unwrap them into nice usable 
-    // constant vectors. Filter_map simply removes all none values. 
+    // We now have complete cleaned lists without none values, unwrap them into nice usable
+    // constant vectors. Filter_map simply removes all none values.
     let women: Vec<Person> = women.into_iter().filter_map(|x| x).collect();
     let men: Vec<Person> = men.into_iter().filter_map(|x| x).collect();
     Ok((women, men))
 }
-
 
 fn gs(women: Vec<Person>, men: Vec<Person>) -> Option<Vec<Option<usize>>> {
     // Array index = women, integer stored = man. None values to show unassigned.
@@ -111,11 +112,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let input = get_input()?;
     let (women, men) = parse_input(input)?;
 
-    // Run and print output.
+    // Allocate a string of the estimated capacity (i.e. 4 numbers + \n on average) so we hopefully
+    // don't have to allocate more memory inside the loop when we push to it.
+    let mut result = String::with_capacity(women.len() * 5);
+
     gs(women, men)
         .expect("Error when running GS algorithm")
         .iter()
-        .for_each(|x| println!("{}", x.unwrap() + 1));
+        .for_each(|x| {
+            // Stdout is by far the slowest part on Windows, build complete string and push out all at once
+            result.push_str(&(x.unwrap() + 1).to_string());
+            result.push('\n')
+        });
+
+    println!("{}", result);
 
     Ok(())
 }
