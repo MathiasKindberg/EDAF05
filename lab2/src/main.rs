@@ -129,7 +129,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for query in input[num_words + 2..].chunks(2) {
         let start = get_index(&graph, &query[0]).expect("Word not found");
         let terminate = get_index(&graph, &query[1]).expect("Word not found");
-        //println!("{}",bfs(&mut graph, start, terminate));
+
         output.push_str(&bfs(&graph, start, terminate));
         output.push('\n');
     }
