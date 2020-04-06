@@ -54,13 +54,11 @@ fn bfs(graph: &[Word], start: usize, terminate: usize) -> String {
     // Initialize values we use while working the graph. Better here than
     // storing something unrelated to the graph in the node since these are
     // based on the search and not the actual structure.
-
     let mut visited: Vec<bool> = vec![false; graph.len()];
-    visited[start] = true;
-
     let mut pred: Vec<Option<usize>> = vec![None; graph.len()];
-
     let mut q: Vec<usize> = Vec::new();
+
+    visited[start] = true;
     q.push(start);
 
     if start == terminate {
