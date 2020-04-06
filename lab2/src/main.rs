@@ -68,7 +68,7 @@ fn bfs(graph: &[Word], start: usize, terminate: usize) -> String {
     while !q.is_empty() {
         let v = q.remove(0);
 
-        for w in &graph[v].edges.clone() {
+        for w in &graph[v].edges {
             if !visited[*w] {
                 // * dereferences the reference.
 
