@@ -26,7 +26,7 @@ fn check_alike(word1: &str, word2: &str) -> bool {
     let mut used_chars = vec![0; 5]; // Keep track of which chars we have already matched on.
 
     // .chars() iterates over the string using Unicode Scalar Values, which works for English and similar
-    // languages that only contains one scalar value per character. This would, as an example not, work on
+    // languages which only contain one scalar value per character. This would, as an example, not work on
     // emojis or asian characters which requires iteration and slicing over grapheme clusters instead.
     for ch1 in word1[1..].chars() {
         for (i, ch2) in word2.chars().enumerate() {
