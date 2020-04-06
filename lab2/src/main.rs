@@ -1,5 +1,7 @@
 use std::io::{self, Read};
 // Get-Content -Path .\1.in -Raw | cargo run
+// cargo run < 1.in
+// add --release for optimized version.
 
 #[derive(Debug, Clone)]
 struct Word {
