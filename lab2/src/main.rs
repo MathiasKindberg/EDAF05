@@ -1,4 +1,6 @@
+use std::collections::VecDeque;
 use std::io::{self, Read};
+
 // Get-Content -Path .\1.in -Raw | cargo run
 // cargo run < 1.in
 // add --release for optimized version.
@@ -56,26 +58,24 @@ fn bfs(graph: &[Word], start: usize, terminate: usize) -> String {
     // based on the search and not the actual structure.
     let mut visited: Vec<bool> = vec![false; graph.len()];
     let mut pred: Vec<Option<usize>> = vec![None; graph.len()];
-    let mut q: Vec<usize> = Vec::new();
+    let mut q: VecDeque<usize> = VecDeque::new();
 
     visited[start] = true;
-    q.push(start);
+    q.push_back(start);
 
     if start == terminate {
         return "0".to_string();
     }
 
-    while !q.is_empty() {
-        let v = q.remove(0);
-
-        for w in &graph[v].edges {
+    while let Some(v) = q.pop_front() {
+        for w in graph[v].edges.iter() {
             if !visited[*w] {
                 // * dereferences the reference.
 
                 visited[*w] = true;
                 pred[*w] = Some(v);
 
-                q.push(*w);
+                q.push_back(*w);
 
                 if *w == terminate {
                     let mut nbr_edges = 0;
