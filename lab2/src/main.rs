@@ -52,6 +52,7 @@ fn get_index(graph: &[Word], word: &str) -> Option<usize> {
     None
 }
 
+
 fn bfs(graph: &[Word], start: usize, terminate: usize) -> String {
     // Initialize values we use while working the graph. Better here than
     // storing something unrelated to the graph in the node since these are
