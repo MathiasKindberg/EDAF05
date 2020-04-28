@@ -21,6 +21,8 @@ struct Node {
     edges: Vec<Edge>,
 }
 
+// The state of the program, essentially an edge with a weight added to the queue which is then
+// popped based on the lowest cost.
 #[derive(Copy, Clone, Eq)]
 struct State {
     cost: usize,
@@ -37,7 +39,7 @@ impl PartialEq for State {
 // Required for sorting.
 impl Ord for State {
     fn cmp(&self, other: &State) -> Ordering {
-        // Flip order of the comparison (other.cost, instead of self.cost).
+        // Flip order of the comparison (other.cost first, instead of self.cost).
         // this makes the heap a min heap instead of max heap which is the default.
         other
             .cost
@@ -78,11 +80,12 @@ fn prim(graph: Vec<Node>) -> usize {
     // Iterate until the heap is empty
     while let Some(state) = heap.pop() {
         if !checked.contains(&state.index) {
-            // O(~1)
+            // O(~1) Make sure we haven't been here before.
             cost += state.cost;
 
             // Add the neighbours to the queue.
-            for edge in &graph[state.index].edges { // O(n)
+            for edge in &graph[state.index].edges {
+                // O(m) (m = number of edges)
 
                 // Node u -> v, if v is not explored. Add to queue.
                 if !checked.contains(&edge.node) {
@@ -96,23 +99,20 @@ fn prim(graph: Vec<Node>) -> usize {
             checked.insert(state.index); // O(~1)
         }
     }
-    return cost; // Since we add 1 to the root which is 0.
+    cost
 }
-
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let input = get_input()?;
     let num_people: usize = input[0].parse()?;
 
     let input = input[2..]
         .iter()
-        .map(|s| {
-            s.parse::<usize>().expect("Error parsing input to integer")
-        })
+        .map(|s| s.parse::<usize>().expect("Error parsing input to integer"))
         .collect::<Vec<usize>>();
-
     // Initialize the empty graph.
-    let mut graph: Vec<_> = (0..num_people).map(|_| Node { edges: Vec::new() }).collect();
-
+    let mut graph: Vec<_> = (0..num_people)
+        .map(|_| Node { edges: Vec::new() })
+        .collect();
 
     // Build the graph
     for edge in input.chunks(3) {
@@ -121,13 +121,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             node: edge[1] - 1,
             weight: edge[2],
         });
-        graph[edge[1]- 1].edges.push(Edge {
+        graph[edge[1] - 1].edges.push(Edge {
             node: edge[0] - 1,
             weight: edge[2],
         });
     }
+    // Getting the input and building the graph takes about 2.5 seconds.
 
     println!("{}", prim(graph));
+
+    // The prim algorithm takes 1.5 seconds.
 
     Ok(())
 }
