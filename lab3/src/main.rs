@@ -1,6 +1,5 @@
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
-use std::collections::HashSet;
 use std::io::{self, Read};
 
 // Get-Content -Path .\1.in -Raw | cargo run
@@ -71,7 +70,7 @@ fn get_input() -> Result<Vec<String>, std::io::Error> {
 
 fn prim(graph: Vec<Node>) -> usize {
     let mut cost = 0;
-    let mut checked = HashSet::new();
+    let mut checked = vec![false; graph.len()];
     let mut heap = BinaryHeap::new(); // Priority queue.
 
     // "Randomly" choose the first node to be our root.
@@ -79,24 +78,21 @@ fn prim(graph: Vec<Node>) -> usize {
 
     // Iterate until the heap is empty
     while let Some(state) = heap.pop() {
-        if !checked.contains(&state.index) {
-            // O(~1) Make sure we haven't been here before.
+        if !checked[state.index] {
             cost += state.cost;
 
             // Add the neighbours to the queue.
+            // O(n) (m = number of nodes)
             for edge in &graph[state.index].edges {
-                // O(m) (m = number of edges)
-
                 // Node u -> v, if v is not explored. Add to queue.
-                if !checked.contains(&edge.node) {
-                    // O(~1)
+                if !checked[edge.node] {
                     heap.push(State {
                         cost: edge.weight,
                         index: edge.node,
-                    }); // O(log(n))
+                    }); // O(log(m)) (m = number of edges)
                 }
             }
-            checked.insert(state.index); // O(~1)
+            checked[state.index] = true;
         }
     }
     cost
@@ -126,11 +122,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             weight: edge[2],
         });
     }
-    // Getting the input and building the graph takes about 2.5 seconds.
+    // Getting the input and building the graph takes ~2.5 seconds on huge dataset.
 
     println!("{}", prim(graph));
-
-    // The prim algorithm takes 1.5 seconds.
+    // The prim algorithm takes ~1.2 seconds on huge dataset.
 
     Ok(())
 }
