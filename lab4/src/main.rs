@@ -83,7 +83,7 @@ fn closest(points_x: Vec<Point>, points_y: Vec<Point>, n: usize) -> f64 {
     // brute force loop. This is how far from the pivot point we need to look at either side of the border.
     let mut delta = closest(l_x, l_y, l_n).min(closest(r_x, r_y, r_n));
     
-    
+
     // Now find the elements we are interested in in O(n) time. In the book the pivot is in the left vector
     // due to the reasoning above here it is in the right. No real difference though.
 
@@ -128,7 +128,6 @@ fn get_input() -> Result<Vec<String>, std::io::Error> {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let input = get_input()?;
-    //println!("{:?}", input);
     let num_people: usize = input[0].parse()?;
     let input = input[1..]
         .iter()
