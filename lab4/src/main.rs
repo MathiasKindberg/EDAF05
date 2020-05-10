@@ -82,6 +82,8 @@ fn closest(points_x: Vec<Point>, points_y: Vec<Point>, n: usize) -> f64 {
     // Find the closest point by comparing the results of the two subproblems recursively until we hit the
     // brute force loop. This is how far from the pivot point we need to look at either side of the border.
     let mut delta = closest(l_x, l_y, l_n).min(closest(r_x, r_y, r_n));
+    
+    
     // Now find the elements we are interested in in O(n) time. In the book the pivot is in the left vector
     // due to the reasoning above here it is in the right. No real difference though.
 
