@@ -1,2 +1,6 @@
 /target
 /.idea
+/algos
+/data/secret/*.out
+/data/sample/*.out
+lab3

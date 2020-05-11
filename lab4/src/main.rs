@@ -128,7 +128,6 @@ fn get_input() -> Result<Vec<String>, std::io::Error> {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let input = get_input()?;
-    let num_people: usize = input[0].parse()?;
     let input = input[1..]
         .iter()
         .map(|s| s.parse::<isize>().expect("Error parsing input to integer"))
